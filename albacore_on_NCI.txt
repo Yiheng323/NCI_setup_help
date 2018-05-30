@@ -19,7 +19,7 @@ read_fast5_basecaller.py -h
 ###after restart nci server, export path and load python 3.6 module every time###
 
 export PYTHONPATH=$HOME/myapps/albacore/2.0.2/lib/python3.6/site-packages
-export PATH=/home/106/yh7166/myapps/albacore/2.0.2/bin/:$PATH
+export PATH=$HOME/myapps/albacore/2.0.2/bin/:$PATH
 module load python3/3.6.2
 
 ##now you are ready to go!##
