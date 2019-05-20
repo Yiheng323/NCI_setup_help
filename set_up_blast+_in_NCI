@@ -5,7 +5,7 @@ mkdir $HOME/mypackages  ## no need to do that if you have that
 cd $HOME/mypackages
 wget ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.9.0/ncbi-blast-2.9.0+-x64-linux.tar.gz 
 
-# Looks like there is no dependencies for blast+, so just unzip it and make the configuration
+# the BLAST require /lib64/libc C++ library, still have not found where it is in NCI 
 
 cd $HOME/mypackages/
 tar zxvpf ncbi-blast-2.9.0+-x64-linux.tar.gz
@@ -17,14 +17,13 @@ export BLASTDB=/short/cq95/yh7166/db/blastdb/
 blastn -h
 
 ###after restart nci server, export path and load python 3.6 module every time###
+export PATH=$HOME/myapps/blast/2.9.0/ncbi-blast-2.9.0+/bin:$PATH
+export BLASTDB=/short/cq95/yh7166/db/blastdb/
 
-export PYTHONPATH=$HOME/myapps/albacore/2.0.2/lib/python3.6/site-packages
-export PATH=$HOME/myapps/rkaken2/2.0.8/:$PATH
-module load gcc/4.9.0
 
 ##now you are ready to go!##
 
-####make a module out of it
+####make a module out of it, here are just copied, not finished
 mkdir -p $HOME/mymodules/kraken2
 vim $HOME/mymodules/kraken2/2.0.8
 #%Module1.0#####################################################################
