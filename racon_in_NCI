@@ -1,0 +1,52 @@
+###install racon in NCI
+#####make sure no compiler modules are loaded initially
+### load the dependencies first
+module load gcc/9.1.0
+module load cmake/3.8.2
+mkdir -p $HOME/myapps/racon/1.4.3
+mkdir $HOME/mypackages  ## no need to do that if you have that
+cd $HOME/mypackages
+git clone https://github.com/DerrickWood/kraken2.git ## Remember, check what version you cloned!!!
+
+# Now make all dependencies, mainly g++ version but we just do a python version as well.
+export PYTHONPATH=$HOME/myapps/kraken2/2.0.8/lib/python3.6/site-packages
+#now load python3
+module load python3/3.6.2
+# now load gcc version, this is available by NCI
+module load gcc/4.9.0
+cd $HOME/mypackages/kraken2/
+./install_kraken2.sh $HOME/myapps/kraken2/2.0.8/.
+export PATH=/home/106/yh7166/myapps/kraken2/2.0.8/:$PATH
+
+###check if all looks good
+kraken2 -h
+
+###after restart nci server, export path and load python 3.6 module every time###
+
+export PYTHONPATH=$HOME/myapps/albacore/2.0.2/lib/python3.6/site-packages
+export PATH=$HOME/myapps/kraken2/2.0.8/:$PATH
+module load gcc/4.9.0
+
+##now you are ready to go!##
+
+####make a module out of it
+mkdir -p $HOME/mymodules/kraken2
+vim $HOME/mymodules/kraken2/2.0.8
+#%Module1.0#####################################################################
+source /opt/Modules/extensions/extensions.tcl
+proc ModulesHelp { } {
+        puts stderr "\tAdds kraken2 directory to the path"
+}
+module-whatis    "kraken2"
+soft-prereq python3/3.6.2
+soft-prereq gcc/4.9.0
+
+set kraken2version 2.0.8
+prepend-path PATH /home/106/yh7166/myapps/kraken2/2.0.8/
+prepend-path PYTHONPATH /home/106/yh7166/myapps/albacore/2.0.2/lib/python3.6/site-packages
+####only once add the following line to ~/.profile ,if added don't worry about it.
+module use -a $HOME/mymodules
+
+
+#quick test using a qlog
+qsub -I -P xf3 -q express -l ncpus=16 -l mem=30GB -l wd
