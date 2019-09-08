@@ -1,0 +1,50 @@
+###install nanopolish in NCI
+#####make sure no compiler modules are loaded initially
+mkdir -p $HOME/myapps/nanopolish
+### install nanopolish does not need to download anything but just git clone and make
+cd $HOME/myapps/nanopolish
+
+# Now make all dependencies, 
+module load hdf5/1.8.14
+module load eigen/3.2.8
+module load htslib/1.4
+module load gcc/4.9.0
+
+# now start install
+git clone --recursive https://github.com/jts/nanopolish.git
+cd nanopolish
+# since we have load all dependencies so no need to install again
+make HDF5=noinstall EIGEN=noinstall HTS=noinstall
+
+export PATH=/home/106/yh7166/myapps/nanopolish/:$PATH
+###check if all looks good
+nanopolish -h
+
+###after restart nci server, export path and load python 3.6 module every time###
+
+
+export PATH=/home/106/yh7166/myapps/nanopolish/:$PATH
+module load gcc/4.9.0
+module load hdf5/1.8.14
+module load eigen/3.2.8
+module load htslib/1.4
+
+##now you are ready to go!##
+
+####make a module out of it
+mkdir -p $HOME/mymodules/nanopolish
+vim $HOME/mymodules/nanopolish/0.11.1
+#%Module1.0#####################################################################
+source /opt/Modules/extensions/extensions.tcl
+proc ModulesHelp { } {
+        puts stderr "\tAdds kraken2 directory to the path"
+}
+module-whatis    "kraken2"
+soft-prereq python3/3.6.2
+soft-prereq gcc/4.9.0
+
+set kraken2version 2.0.8
+prepend-path PATH /home/106/yh7166/myapps/kraken2/2.0.8/
+prepend-path PYTHONPATH /home/106/yh7166/myapps/albacore/2.0.2/lib/python3.6/site-packages
+####only once add the following line to ~/.profile ,if added don't worry about it.
+module use -a $HOME/mymodules
