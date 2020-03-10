@@ -1,0 +1,44 @@
+###install trimmomatic in NCI
+#####make sure no compiler modules are loaded initially
+##### As trimmomatic has binary version so we can simply download it in mypackages
+mkdir $HOME/mypackages  ## no need to do that if you have that
+cd $HOME/mypackages
+wget http://www.usadellab.org/cms/uploads/supplementary/Trimmomatic/Trimmomatic-0.39.zip  #note the version
+unzip Trimmomatic-0.39.zip
+mv Trimmomatic-0.39 $HOME/myapps
+
+# Now make all dependencies, just java.
+module load java/jdk-13.33
+
+cd $HOME/myapps/Trimmomatic-0.39/
+export PATH=/home/106/yh7166/myapps/Trimmomatic-0.39/:$PATH
+
+###check if all looks good
+java -jar trimmomatic-0.39.jar --help
+
+###after restart nci server, export path and load java every time###
+export PATH=/home/106/yh7166/myapps/Trimmomatic-0.39/:$PATH
+module load java/jdk-13.33
+
+##now you are ready to go!##
+
+####make a module out of it
+mkdir -p $HOME/mymodules/trimmomatic
+vim $HOME/mymodules/trimmomatic/0.39
+#%Module1.0#####################################################################
+source /opt/Modules/extensions/extensions.tcl
+proc ModulesHelp { } {
+        puts stderr "\tAdds trimmomatic directory to the path"
+}
+module-whatis    "trimmomatic"
+soft-prereq java/jdk-13.33
+
+set trimmomaticversion 0.39
+prepend-path PATH /home/106/yh7166/myapps/Trimmomatic-0.39/
+
+####only once add the following line to ~/.profile ,if added don't worry about it.
+module use -a $HOME/mymodules
+
+
+#quick test using a qlog
+qsub -I -P xf3 -q express -l ncpus=16 -l mem=30GB -l wd
