@@ -1,4 +1,4 @@
-###install trimmomatic in NCI
+###install trimmomatic in Gadi
 #####make sure no compiler modules are loaded initially
 ##### As trimmomatic has binary version so we can simply download it in mypackages
 mkdir $HOME/mypackages  ## no need to do that if you have that
